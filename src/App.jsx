@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const WHATSAPP =
   'https://wa.me/5511983428801?text=Olá,%20vim%20pelo%20site%20da%20OxyCont'
 
-const animatedWords = ['clareza', 'estrutura', 'crescimento', 'segurança']
+const words = ['crescimento.', 'segurança.', 'clareza.', 'estrutura.']
 
 const systems = ['SAP B1', 'Domínio', 'MEGA', 'Totvs', 'Dynamics 365', 'Sienge']
 
@@ -90,15 +90,27 @@ const differentials = [
   },
 ]
 
-export default function App() {
-  const [wordIndex, setWordIndex] = useState(0)
+function AnimatedWord() {
+  const [idx, setIdx] = useState(0)
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % animatedWords.length)
+  // CSS-only animation driven by interval without layout shift
+  if (typeof window !== 'undefined' && !window.__oxyWordInterval) {
+    window.__oxyWordInterval = window.setInterval(() => {
+      setIdx((prev) => (prev + 1) % words.length)
     }, 2200)
-    return () => clearInterval(timer)
-  }, [])
+  }
+
+  return (
+    <span className="word-slot">
+      <span key={words[idx]} className="animated-word">
+        {words[idx]}
+      </span>
+    </span>
+  )
+}
+
+export default function App() {
+  const [videoReady, setVideoReady] = useState(false)
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -119,7 +131,7 @@ export default function App() {
     <>
       <header className="header">
         <div className="container header-inner">
-          <a href="#top" aria-label="OxyCont">
+          <a href="#top" aria-label="OxyCont" className="logo-wrap">
             <img className="logo" src="/logo.jpeg" alt="OxyCont" />
           </a>
 
@@ -138,44 +150,65 @@ export default function App() {
       </header>
 
       <main id="top">
-        <section className="hero-video premium-hero">
-          <video autoPlay muted loop playsInline className="background-video">
+        <section className="hero-video">
+          <div className="hero-fallback" />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`background-video ${videoReady ? 'is-visible' : ''}`}
+            onCanPlay={() => setVideoReady(true)}
+          >
             <source
-              src="https://cdn.coverr.co/videos/coverr-discussing-business-ideas-1560275676554?download=1080p"
+              src="https://cdn.coverr.co/videos/coverr-analyzing-financial-data-1572023811206?download=1080p"
               type="video/mp4"
             />
           </video>
+
           <div className="video-overlay"></div>
-          <div className="hero-glow hero-glow-1"></div>
-          <div className="hero-glow hero-glow-2"></div>
 
           <div className="hero-content">
             <div className="container hero-grid">
               <div className="hero-copy">
-                <div className="eyebrow fade-in-up">Clareza, confiança e crescimento</div>
+                <div className="eyebrow fade-in-up">Contabilidade estratégica para empresas em evolução</div>
                 <h1 className="fade-in-up delay-1">
-                  Contabilidade com mais{' '}
-                  <span key={animatedWords[wordIndex]} className="animated-word">
-                    {animatedWords[wordIndex]}
-                  </span>{' '}
-                  para o seu negócio.
+                  Gestão contábil completa para impulsionar o seu
+                  <br />
+                  <AnimatedWord />
                 </h1>
                 <p className="fade-in-up delay-2">
-                  Consultoria contábil moderna para decisões mais inteligentes, atendimento
-                  próximo e uma estrutura completa de BPO para apoiar a evolução da sua empresa.
+                  Soluções contábeis estratégicas e personalizadas para empresas que buscam
+                  crescimento, segurança, organização e tranquilidade na tomada de decisão.
                 </p>
+
                 <div className="hero-actions fade-in-up delay-3">
                   <a className="btn btn-primary" href={WHATSAPP} target="_blank" rel="noreferrer">
-                    Solicitar contato
+                    Fale com um especialista
                   </a>
-                  <a className="btn btn-secondary btn-soft" href="#sobre">
-                    Conheça a OxyCont
+                  <a className="btn btn-secondary btn-soft" href={WHATSAPP} target="_blank" rel="noreferrer">
+                    WhatsApp
                   </a>
+                </div>
+
+                <div className="hero-highlights fade-in-up delay-4">
+                  <div className="highlight-item">
+                    <strong>Segurança</strong>
+                    <span>Conformidade e proteção para sua empresa</span>
+                  </div>
+                  <div className="highlight-item">
+                    <strong>Estratégia</strong>
+                    <span>Informações precisas para decisões assertivas</span>
+                  </div>
+                  <div className="highlight-item">
+                    <strong>Atendimento</strong>
+                    <span>Suporte próximo, ágil e humanizado</span>
+                  </div>
                 </div>
               </div>
 
               <div className="hero-side-card fade-in-up delay-4">
-                <h3>Nova apresentação da marca</h3>
+                <h3>OxyCont</h3>
                 <div className="hero-side-grid">
                   <div className="hero-mini">
                     <strong>Posicionamento</strong>
